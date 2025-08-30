@@ -1,0 +1,22 @@
+.line-chart-container {
+  width: 100%;
+  padding: 1rem;
+}
+
+.line-chart-header {
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.line-chart-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.line-chart-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}

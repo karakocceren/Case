@@ -1,0 +1,38 @@
+.white-container {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 2rem auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.overview-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.ad-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+.ads-list {
+  margin-top: 1rem;
+}
+
+.ads-list .ad-item {
+  border-bottom: 1px solid #eee;
+}
+
+.ads-list .ad-item:last-child {
+  border-bottom: none;
+}
+
+.content {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  opacity: 0.8;
+}

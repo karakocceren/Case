@@ -1,0 +1,157 @@
+.white-container {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 2rem auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow-x: hidden;
+}
+
+.summary-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.metrics-list {
+  margin-top: 1rem;
+}
+
+.metrics-list .metric-bar {
+  padding: 3rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.metrics-list .metric-bar:last-child {
+  border-bottom: none;
+}
+
+.metric-header {
+  display: flex;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  align-items: center;
+  margin-left: 1rem;
+  gap: 1rem;
+}
+
+.metric-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.arrow-icon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.18s ease-in-out;
+  color: #111;
+  filter: drop-shadow(0 0 1px rgba(0,0,0,0.3));
+}
+
+.metric-content {
+  margin-left: 0;
+}
+
+.bar {
+  display: flex;
+  height: 36px;
+  border-radius: 50px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.bar-segment {
+  height: 100%;
+  min-width: 0;
+}
+
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 50px;
+  border: 1px solid #ddd;
+  background: #fff;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+}
+
+.chip.equal {
+  flex: 1 1 120px;
+  min-width: 80px;
+  justify-content: flex-start;
+}
+
+.chip.legend {
+  flex: none;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  width: 150px;
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+}
+
+.chip-color {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: 0 0 12px;
+}
+
+.chip-label {
+  white-space: nowrap;
+}
+
+.chip-value {
+  font-weight: 600;
+}
+
+.legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 640px) {
+  .white-container {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .metric-content {
+    margin-left: 0.25rem;
+  }
+
+  .bar {
+    height: 28px;
+  }
+
+  .chip {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.6rem;
+  }
+
+  .chips-row {
+    gap: 0.4rem;
+  }
+
+  .chip.equal {
+    flex: 1 1 100px;
+    padding: 0.35rem 0.4rem;
+  }
+}

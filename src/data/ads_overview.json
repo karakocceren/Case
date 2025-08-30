@@ -1,0 +1,44 @@
+{
+   "status":{
+      "success":true
+   },
+   "data":{
+      "data":[
+         {
+            "dateStart":"2025-08-19",
+            "spend":"8018.39",
+            "adName":"19 Ağustos",
+            "dateStop":"2025-08-25",
+            "impressions":"818582"
+         },
+         {
+            "dateStart":"2025-08-19",
+            "spend":"8019.0",
+            "adName":"19 Ağustos",
+            "dateStop":"2025-08-25",
+            "impressions":"622236"
+         },
+         {
+            "dateStart":"2025-08-19",
+            "spend":"4195.79",
+            "adName":"15 Ağustos",
+            "dateStop":"2025-08-25",
+            "impressions":"174438"
+         },
+         {
+            "dateStart":"2025-08-19",
+            "spend":"4183.87",
+            "adName":"15 Ağustos",
+            "dateStop":"2025-08-25",
+            "impressions":"137122"
+         },
+         {
+            "dateStart":"2025-08-19",
+            "spend":"3369.25",
+            "adName":"22 Ağustos",
+            "dateStop":"2025-08-25",
+            "impressions":"123047"
+         }
+      ]
+   }
+}

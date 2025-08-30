@@ -1,0 +1,44 @@
+import React, { useState, useMemo } from "react";
+import AdItem from "./AdItem";
+import adsData from "../../data/ads_overview.json";
+import "./styles.css";
+
+const Overview: React.FC = () => {
+  const [interval, setInterval] = useState("30");
+
+  const filteredAds = useMemo(() => {
+    const days = parseInt(interval, 10);
+    const today = new Date("2025-08-25");
+    const cutoff = new Date(today);
+    cutoff.setDate(today.getDate() - days);
+
+    return adsData.data.data.filter((ad) => {
+      const start = new Date(ad.dateStart);
+      return start >= cutoff && start <= today;
+    });
+  }, [interval]);
+
+  return (
+    <div className="white-container">
+      <h2 className="overview-title">Ads Overview</h2>
+
+      <div style={{ marginBottom: "1rem" }}>
+        <select value={interval} onChange={(e) => setInterval(e.target.value)}>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+        </select>
+      </div>
+
+      <div className="ads-list">
+        {filteredAds.length > 0 ? (
+          filteredAds.map((ad, idx) => <AdItem key={idx} ad={ad} />)
+        ) : (
+          <p>No data for selected interval.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Overview;
