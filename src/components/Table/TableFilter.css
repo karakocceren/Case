@@ -1,0 +1,130 @@
+.table-filter-popup {
+  min-width: 300px;
+  padding: 20px 12px 16px 8px !important;
+}
+
+.table-filter-popup .inputs-row {
+  display: flex;
+  flex-direction: row;
+  margin-left: 24px;
+  margin-right: 10px;
+  flex-wrap: wrap;
+}
+
+.table-filter-popup .inputs-row > div {
+  margin: 10px;
+  flex: 1 1 auto;
+}
+
+.table-filter-popup label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.table-filter-popup select,
+.table-filter-popup input {
+  padding: 8.5px 14px;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.table-filter-popup .active-filters {
+  margin-bottom: 1rem;
+  max-height: 10rem;
+  overflow-y: auto;
+}
+
+.table-filter-popup .active-filters .filter-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.table-filter-popup .active-filters .filter-row button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0 4px 0 0;
+}
+
+.table-filter-popup .active-filters .filter-row select[disabled],
+.table-filter-popup .active-filters .filter-row input[disabled] {
+  margin: 10px;
+  padding: 8.5px 14px;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+}
+
+.table-filter-popup .active-filters .filter-row select[disabled] {
+  font-size: 14px;
+}
+
+.table-filter-popup .active-filters p {
+  font-style: italic;
+  margin-left: 34px;
+}
+
+.table-filter-popup .active-filters .filter-row input[disabled] {
+  background-color: #f7f8f9;
+  color: #919193;
+}
+
+.table-filter-popup .buttons-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 20px 0 34px;
+  flex-wrap: wrap;
+}
+
+.table-filter-popup .buttons-row button {
+  font-size: 14px;
+  outline: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.table-filter-popup .buttons-row svg {
+  margin-right: 4px;
+}
+
+@media (max-width: 640px) {
+  .table-filter-popup .inputs-row {
+    flex-direction: column;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .table-filter-popup .inputs-row > div {
+    margin: 5px 0;
+    width: 100%;
+  }
+
+  .table-filter-popup .active-filters .filter-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .table-filter-popup .buttons-row {
+    flex-direction: column;
+    align-items: stretch;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .table-filter-popup .buttons-row button {
+    width: 100%;
+    justify-content: center;
+  }
+}

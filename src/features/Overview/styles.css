@@ -2,7 +2,6 @@
   background-color: #fff;
   border-radius: 16px;
   padding: 2rem;
-  max-width: 1200px;
   width: 100%;
   margin: 2rem auto;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -11,6 +10,32 @@
 .overview-title {
   font-size: 1.5rem;
   font-weight: 600;
+}
+
+.select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.select {
+  padding: 0.25rem 1.5rem 0.25rem 0.25rem;
+  border: none;
+  border-radius: 4px;
+  appearance: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.select-wrapper .chevron-icon {
+  position: absolute;
+  right: 0.25rem;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  color: #333;
 }
 
 .ad-item {
@@ -24,6 +49,11 @@
 
 .ads-list .ad-item {
   border-bottom: 1px solid #eee;
+}
+
+.ads-list .ad-item:first-child {
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
 }
 
 .ads-list .ad-item:last-child {

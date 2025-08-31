@@ -6,7 +6,6 @@ const TrafficBarChart: React.FC = () => {
   return (
     <BarChart
       title="Users by Session default channel group"
-      subtitle="Clipped at 500"
       data={trafficData.data.trafficBarMetrics}
       maxValue={500}
     />

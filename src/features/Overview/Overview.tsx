@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import AdItem from "./AdItem";
 import adsData from "../../data/ads_overview.json";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import "./styles.css";
 
 const Overview: React.FC = () => {
@@ -22,12 +23,13 @@ const Overview: React.FC = () => {
     <div className="white-container">
       <h2 className="overview-title">Ads Overview</h2>
 
-      <div style={{ marginBottom: "1rem" }}>
-        <select value={interval} onChange={(e) => setInterval(e.target.value)}>
+      <div className="select-wrapper">
+        <select className="select" value={interval} onChange={(e) => setInterval(e.target.value)}>
           <option value="7">Last 7 days</option>
           <option value="30">Last 30 days</option>
           <option value="90">Last 90 days</option>
         </select>
+        <ChevronDownIcon className="chevron-icon" />
       </div>
 
       <div className="ads-list">

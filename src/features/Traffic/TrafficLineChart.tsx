@@ -2,7 +2,7 @@ import React from "react";
 import LineChart from "../../components/LineChart/LineChart";
 import trafficData from "../../data/Traffic_acquisition.json";
 
-const COLORS = ["turquoise", "purple", "pink", "green", "yellow"];
+const COLORS = ["#2ccce4", "#7f3fbf", "#e84393", "#27ae60", "#f1c40f"];
 
 const TrafficLineChart: React.FC = () => {
   const metrics = trafficData.data.trafficDateMetrics;
@@ -18,12 +18,12 @@ const TrafficLineChart: React.FC = () => {
         )
       )
     )
-  ).sort(
-    (a, b) => new Date(a).getTime() - new Date(b).getTime()
-  );
+  ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   const globalMax = Math.max(
-    ...metrics.flatMap((m) => m.metricValue.map((v: { value: number }) => v.value))
+    ...metrics.flatMap((m) =>
+      m.metricValue.map((v: { value: number }) => v.value)
+    )
   );
 
   const datasets = metrics.map((dimension, idx) => ({
@@ -36,7 +36,11 @@ const TrafficLineChart: React.FC = () => {
             day: "numeric",
           }) === dateLabel
       );
-      return found ? (found.value / globalMax) * 100 : 0;
+      return {
+        x: dateLabel,
+        y: found ? (found.value / globalMax) * 100 : 0,
+        original: found ? found.value : 0,
+      };
     }),
     borderColor: COLORS[idx % COLORS.length],
     backgroundColor: COLORS[idx % COLORS.length],
@@ -44,7 +48,6 @@ const TrafficLineChart: React.FC = () => {
 
   return (
     <LineChart
-      title="Traffic acquisition: Session default channel group"
       subtitle="Users by Session default channel group over time"
       labels={allDates}
       datasets={datasets}

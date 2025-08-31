@@ -7,10 +7,15 @@ import "./styles.css";
 const Traffic: React.FC = () => {
   return (
     <div className="white-container">
+      <h2 className="traffic-header">
+        Traffic acquisition: Session default channel group
+      </h2>
+
       <div className="charts-section">
         <TrafficLineChart />
         <TrafficBarChart />
       </div>
+
       <div className="table-section">
         <TrafficTable />
       </div>
@@ -18,4 +23,4 @@ const Traffic: React.FC = () => {
   );
 }
 
-export default Traffic
+export default Traffic;

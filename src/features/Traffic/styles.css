@@ -2,10 +2,15 @@
   background-color: #fff;
   border-radius: 16px;
   padding: 2rem;
-  max-width: 1200px;
   width: 100%;
   margin: 2rem auto;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.traffic-header {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
 }
 
 .charts-section {
@@ -17,6 +22,8 @@
 
 .charts-section > * {
   flex: 1 1 400px;
+  min-width: 0;
+  height: 350px;
 }
 
 .charts-section > div {
@@ -37,4 +44,11 @@
 
 .table-section {
   margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .charts-section > * {
+    flex: 1 1 100%;
+    height: 300px;
+  }
 }

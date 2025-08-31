@@ -13,26 +13,32 @@ import {
 import { Line } from "react-chartjs-2";
 import "./LineChart.css";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend
+);
 
 type LineChartProps = {
-  title: string;
   subtitle?: string;
   labels: string[];
   datasets: {
     label: string;
-    data: number[];
+    data: { x: string; y: number; original: number }[];
     borderColor: string;
     backgroundColor: string;
   }[];
 };
 
-const LineChart: React.FC<LineChartProps> = ({ title, subtitle, labels, datasets }) => {
-  const data: ChartData<"line"> = {
+const LineChart: React.FC<LineChartProps> = ({ subtitle, labels, datasets }) => {
+  const data: ChartData<"line", { x: string; y: number; original: number }[]> = {
     labels,
     datasets: datasets.map((ds) => ({
       ...ds,
-      tension: 0.4,
+      tension: 0,
       pointRadius: 4,
       pointHoverRadius: 6,
       borderWidth: 2,
@@ -42,15 +48,29 @@ const LineChart: React.FC<LineChartProps> = ({ title, subtitle, labels, datasets
 
   const options: ChartOptions<"line"> = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { position: "top" as const },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const raw = context.raw as { x: string; y: number; original: number };
+            return `${context.dataset.label}: ${raw.original}`;
+          },
+        },
+      },
     },
     scales: {
       y: {
         beginAtZero: true,
         max: 100,
         ticks: {
-          stepSize: 20,
+          stepSize: 10,
+          callback: function (value) {
+            if (Number(value) % 10 === 0) {
+              return value;
+            }
+          },
         },
       },
     },
@@ -58,11 +78,15 @@ const LineChart: React.FC<LineChartProps> = ({ title, subtitle, labels, datasets
 
   return (
     <div className="line-chart-container">
-      <div className="line-chart-header">
-        <h2 className="line-chart-title">{title}</h2>
-        {subtitle && <p className="line-chart-subtitle">{subtitle}</p>}
-      </div>
-      <Line data={data} options={options} />
+      {subtitle && <div className="line-chart-subtitle">{subtitle}</div>}
+      <Line
+        data={data}
+        options={options}
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      />
     </div>
   );
 };
