@@ -26,7 +26,7 @@ const NetworkChip: React.FC<Props> = ({
         <span className="chip-label">{meta.label}</span>
       ) : (
         <span className="chip-value">
-          {value}
+          {value}%
         </span>
       )}
     </div>

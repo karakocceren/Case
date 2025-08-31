@@ -12,6 +12,7 @@ type TableToolbarProps = {
   columns: string[];
   rows: (string | number)[][];
   filterPopupOpen: boolean;
+  columnOptionsOpen?: boolean;
   children?: React.ReactNode;
 };
 
@@ -23,28 +24,34 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   columns,
   rows,
   filterPopupOpen,
+  columnOptionsOpen,
   children,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
+  const columnButtonRef = useRef<HTMLButtonElement>(null);
   const [popupPos, setPopupPos] = useState({ top: 0, left: 0 });
 
+  const calculatePopupPosition = (
+    buttonRef: React.RefObject<HTMLButtonElement | null>
+  ) => {
+    if (!buttonRef.current) return { top: 0, left: 0 };
+    const rect = buttonRef.current.getBoundingClientRect();
+    return { top: rect.bottom + window.scrollY, left: rect.right + window.scrollX };
+  };
+
   useEffect(() => {
-    if (filterButtonRef.current && filterPopupOpen) {
-      const rect = filterButtonRef.current.getBoundingClientRect();
-      setPopupPos({ top: rect.bottom + 4, left: rect.left });
+    if (filterPopupOpen) {
+      setPopupPos(calculatePopupPosition(filterButtonRef));
+    } else if (columnOptionsOpen) {
+      setPopupPos(calculatePopupPosition(columnButtonRef));
     }
-  }, [filterPopupOpen]);
+  }, [filterPopupOpen, columnOptionsOpen]);
 
   return (
     <div className="table-actions">
       <div className="filter-container">
-        <button
-          className="filter-btn"
-          ref={filterButtonRef}
-          onClick={onFilterClick}
-        >
+        <button className="filter-btn" ref={filterButtonRef} onClick={onFilterClick}>
           <Filter className="icon" />
           <span>Filter</span>
         </button>
@@ -77,37 +84,37 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         <button
           className="icon-btn"
           title="Layout Options"
+          ref={columnButtonRef}
           onClick={onViewOptionsClick}
         >
           <LayoutThreeColumns className="icon" />
         </button>
       </div>
 
-      {filterPopupOpen && children &&
+      {(filterPopupOpen || columnOptionsOpen) && children &&
         createPortal(
           <div
-            className="filter-popup"
-            ref={popupRef}
+            className={filterPopupOpen ? "filter-popup" : "column-options-popup"}
             style={{
-              position: "fixed",
+              position: "absolute",
               top: popupPos.top,
-              left:
-                window.innerWidth <= 768
-                  ? "50%"
-                  : popupPos.left -
-                    (popupRef.current?.offsetWidth ?? 320) +
-                    filterButtonRef.current!.offsetWidth,
-              transform:
-                window.innerWidth <= 768 ? "translateX(-50%)" : "none",
+              left: window.innerWidth <= 768
+                ? "50%"
+                : popupPos.left,
+              transform: window.innerWidth <= 768
+                ? "translateX(-50%)"
+                : "translateX(-100%)",
               zIndex: 1000,
               maxHeight: "80vh",
               overflowY: "auto",
+              width: filterPopupOpen ? "320px" : "250px",
             }}
           >
             {children}
           </div>,
           document.body
-        )}
+        )
+      }
     </div>
   );
 };

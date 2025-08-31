@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import "./Table.css";
 
 type TablePaginationProps = {
   currentPage: number;

@@ -9,7 +9,7 @@ const Overview: React.FC = () => {
 
   const filteredAds = useMemo(() => {
     const days = parseInt(interval, 10);
-    const today = new Date("2025-08-25");
+    const today = new Date();
     const cutoff = new Date(today);
     cutoff.setDate(today.getDate() - days);
 

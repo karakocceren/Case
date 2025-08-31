@@ -9,24 +9,37 @@ type MetricBarProps = {
   values: MetricValues;
 };
 
+const NETWORK_ORDER: NetworkKey[] = [
+  "search",
+  "search_partners",
+  "content",
+  "youtube",
+  "mixed",
+];
+
 const MIN_WIDTH_PERCENT = 1;
+
+const capitalizeFirstLetter = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 const MetricBar: React.FC<MetricBarProps> = ({ title, values }) => {
   const [open, setOpen] = useState(true);
 
   const networks = Object.entries(values) as [NetworkKey, number][];
-  const total = networks.reduce((sum, [, v]) => sum + v, 0) || 1;
+  networks.sort(
+    ([a], [b]) => NETWORK_ORDER.indexOf(a) - NETWORK_ORDER.indexOf(b)
+  );
 
   const normalized = networks.map(([network, raw]) => ({
     network,
     raw,
-    percent: (raw / total) * 100,
   }));
 
   return (
     <div className="metric-bar">
       <div className="metric-header" onClick={() => setOpen((p) => !p)}>
-        <span className="metric-title">{title}</span>
+        <span className="metric-title">{capitalizeFirstLetter(title)}</span>
         {open ? (
           <ChevronDownIcon className="arrow-icon" />
         ) : (
@@ -37,15 +50,15 @@ const MetricBar: React.FC<MetricBarProps> = ({ title, values }) => {
       {open && (
         <div className="metric-content">
           <div className="bar" role="img" aria-label={`${title} distribution`}>
-            {normalized.map(({ network, percent, raw }) => {
-              if (percent <= 0) return null;
+            {normalized.map(({ network, raw }) => {
+              if (raw <= 0) return null;
               const meta = getNetworkMeta(network);
               return (
                 <div
                   key={network}
                   className="bar-segment"
                   style={{
-                    width: `${Math.max(percent, MIN_WIDTH_PERCENT)}%`,
+                    width: `${Math.max(raw, MIN_WIDTH_PERCENT)}%`,
                     backgroundColor: meta.color,
                   }}
                   title={`${meta.label}: ${raw}`}

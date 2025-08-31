@@ -39,8 +39,8 @@ const LineChart: React.FC<LineChartProps> = ({ subtitle, labels, datasets }) => 
     datasets: datasets.map((ds) => ({
       ...ds,
       tension: 0,
-      pointRadius: 4,
-      pointHoverRadius: 6,
+      pointRadius: 2,
+      pointHoverRadius: 4,
       borderWidth: 2,
       fill: false,
     })),
@@ -61,6 +61,11 @@ const LineChart: React.FC<LineChartProps> = ({ subtitle, labels, datasets }) => 
       },
     },
     scales: {
+      x: {
+        grid: {
+          drawOnChartArea: false,
+        },
+      },
       y: {
         beginAtZero: true,
         max: 100,

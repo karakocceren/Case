@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import type { Column, Filter } from "./Table";
 import { PlusLg, TrashFill, XLg } from "react-bootstrap-icons";
 import "./TableFilter.css";
@@ -22,6 +22,12 @@ const TableFilter: React.FC<TableFilterProps> = ({
   removeFilter,
   removeAllFilters,
 }) => {
+  const operatorOptions: Filter["operator"][] = [
+    "equals",
+    "contains",
+    "startsWith",
+    "endsWith",
+  ];
 
   const capitalizeWords = (str: string) => {
     const withSpaces = str.replace(/([A-Z])/g, " $1").trim();
@@ -38,7 +44,9 @@ const TableFilter: React.FC<TableFilterProps> = ({
           <label>Column</label>
           <select
             value={newFilter.column}
-            onChange={(e) => setNewFilter({ ...newFilter, column: e.target.value })}
+            onChange={(e) =>
+              setNewFilter({ ...newFilter, column: e.target.value })
+            }
           >
             {columns.map((col, i) => (
               <option key={i} value={col.name}>
@@ -52,12 +60,18 @@ const TableFilter: React.FC<TableFilterProps> = ({
           <label>Operator</label>
           <select
             value={newFilter.operator}
-            onChange={(e) => setNewFilter({ ...newFilter, operator: e.target.value })}
+            onChange={(e) =>
+              setNewFilter({
+                ...newFilter,
+                operator: e.target.value as Filter["operator"],
+              })
+            }
           >
-            <option value="equals">Equals</option>
-            <option value="contains">Contains</option>
-            <option value="startsWith">Starts With</option>
-            <option value="endsWith">Ends With</option>
+            {operatorOptions.map((op) => (
+              <option key={op} value={op}>
+                {capitalizeWords(op)}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -66,7 +80,9 @@ const TableFilter: React.FC<TableFilterProps> = ({
           <input
             type="text"
             value={newFilter.value}
-            onChange={(e) => setNewFilter({ ...newFilter, value: e.target.value })}
+            onChange={(e) =>
+              setNewFilter({ ...newFilter, value: e.target.value })
+            }
             placeholder="Enter value"
           />
         </div>
@@ -105,6 +121,6 @@ const TableFilter: React.FC<TableFilterProps> = ({
       </div>
     </div>
   );
-}
+};
 
 export default TableFilter;

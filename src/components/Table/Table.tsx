@@ -9,10 +9,12 @@ import {
   type ColumnFiltersState,
   type VisibilityState,
   type Row,
+  type CellContext,
 } from "@tanstack/react-table";
 import TableFilter from "./TableFilter";
 import TableToolbar from "./TableToolbar";
 import TablePagination from "./TablePagination";
+import ColumnOptions from "./ColumnOptions";
 import "./Table.css";
 
 export type Column = {
@@ -34,13 +36,26 @@ type TableRow = (string | number)[];
 
 export type Filter = {
   column: string;
-  operator: string;
+  operator: "equals" | "contains" | "startsWith" | "endsWith";
   value: string;
 };
 
+const formatEngagementTime = (minutesDecimal: number): string => {
+  if (!isFinite(minutesDecimal) || minutesDecimal <= 0) return "0 mins, 0 secs";
+  const totalSeconds = Math.round(minutesDecimal * 60);
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  return `${mins} mins, ${secs} secs`;
+};
+
+const formatPercentage = (value: number): string => {
+  if (!isFinite(value)) return "";
+  return `${value}%`;
+};
+
 const Table: React.FC<TableProps> = ({ columns, rows }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     Object.fromEntries(columns.map((c) => [c.name, c.options.display]))
@@ -51,23 +66,29 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
     value: "",
   });
   const [filters, setFilters] = useState<Filter[]>([]);
-  const [filterPopupOpen, setFilterPopupOpen] = useState(false);
+  const [filterPopupOpen, setFilterPopupOpen] = useState<boolean>(false);
+  const [columnOptionsOpen, setColumnOptionsOpen] = useState<boolean>(false);
 
   const rowsPerPage = 5;
 
-  const customFilterFn = (row: Row<TableRow>, columnId: string, filterValue: Filter) => {
-    const rowValue = row.getValue(columnId)?.toString() ?? "";
-    const { operator, value } = filterValue;
+  const customFilterFn = (
+    row: Row<TableRow>,
+    columnId: string,
+    filterValue: Filter
+  ): boolean => {
+    const raw = row.getValue(columnId);
+    const rowValue = (raw ?? "").toString();
+    const needle = filterValue.value;
 
-    switch (operator) {
+    switch (filterValue.operator) {
       case "equals":
-        return rowValue === value;
+        return rowValue === needle;
       case "contains":
-        return rowValue.toLowerCase().includes(value.toLowerCase());
+        return rowValue.toLowerCase().includes(needle.toLowerCase());
       case "startsWith":
-        return rowValue.toLowerCase().startsWith(value.toLowerCase());
+        return rowValue.toLowerCase().startsWith(needle.toLowerCase());
       case "endsWith":
-        return rowValue.toLowerCase().endsWith(value.toLowerCase());
+        return rowValue.toLowerCase().endsWith(needle.toLowerCase());
       default:
         return true;
     }
@@ -76,15 +97,31 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
   const tableColumns = useMemo<ColumnDef<TableRow>[]>(
     () =>
       columns
-        .filter((col) => col.options.display)
-        .map((col, i) => ({
-          id: col.name,
-          header: col.label,
-          accessorFn: (row: TableRow) => row[i],
-          enableColumnFilter: col.options.filter,
-          filterFn: customFilterFn,
-        })),
-    [columns]
+        .filter((col) => columnVisibility[col.name])
+        .map((col, index): ColumnDef<TableRow> => {
+          let cell:
+            | ((ctx: CellContext<TableRow, unknown>) => React.ReactNode)
+            | undefined;
+
+          if (col.name === "Average Engagement Time Per Session") {
+            cell = (ctx) => formatEngagementTime(Number(ctx.getValue()));
+          } else if (col.name === "Engagement Rate") {
+            cell = (ctx) => formatPercentage(Number(ctx.getValue()));
+          } else {
+            cell = (ctx) => ctx.getValue() as React.ReactNode;
+          }
+
+          return {
+            id: col.name,
+            header: col.label,
+            accessorFn: (row) => row[index],
+            enableColumnFilter: col.options.filter,
+            enableSorting: col.options.sort,
+            filterFn: customFilterFn,
+            cell,
+          };
+        }),
+    [columns, columnVisibility]
   );
 
   const table = useReactTable({
@@ -97,47 +134,33 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
     },
     onGlobalFilterChange: setSearchQuery,
     onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    filterFns: {
-      customFilter: customFilterFn,
-    },
+    filterFns: { customFilter: customFilterFn },
   });
 
-  const totalPages = Math.ceil(rows.length / rowsPerPage);
-  const paginatedRows = table.getRowModel().rows.slice(
+  const allRows = table.getRowModel().rows;
+  const totalPages = Math.max(1, Math.ceil(allRows.length / rowsPerPage));
+  const paginatedRows = allRows.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
   const toggleFilterPopup = () => setFilterPopupOpen((prev) => !prev);
 
-  const addFilter = () => {
-    if (newFilter.value.trim() !== "") {
-      setFilters([...filters, newFilter]);
-      setColumnFilters((prev) => [
-        ...prev,
-        { id: newFilter.column, value: newFilter },
-      ]);
-      setNewFilter({
-        ...newFilter,
-        value: "",
-      });
-    }
-  };
-
-  const removeFilter = (index: number) => {
-    const filterToRemove = filters[index];
-    setFilters(filters.filter((_, i) => i !== index));
-    setColumnFilters((prev) => prev.filter((f) => f.id !== filterToRemove.column));
-  };
-
-  const removeAllFilters = () => {
-    setFilters([]);
-    setColumnFilters([]);
-  };
+  const downloadRows = allRows.map((row) =>
+    tableColumns.map((col, index) => {
+      const rawValue = row.original[index];
+      if (col.id === "Average Engagement Time Per Session") {
+        return formatEngagementTime(Number(rawValue));
+      } else if (col.id === "Engagement Rate") {
+        return formatPercentage(Number(rawValue));
+      }
+      return rawValue ?? "";
+    })
+  );
 
   return (
     <div className="table-container">
@@ -145,20 +168,52 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onFilterClick={toggleFilterPopup}
-        onViewOptionsClick={() => {}}
+        onViewOptionsClick={() => setColumnOptionsOpen((prev) => !prev)}
         columns={columns.map((c) => c.label)}
-        rows={rows}
+        rows={downloadRows}
         filterPopupOpen={filterPopupOpen}
+        columnOptionsOpen={columnOptionsOpen}
       >
-        <TableFilter
-          columns={columns}
-          newFilter={newFilter}
-          setNewFilter={setNewFilter}
-          filters={filters}
-          addFilter={addFilter}
-          removeFilter={removeFilter}
-          removeAllFilters={removeAllFilters}
-        />
+        {filterPopupOpen && (
+          <TableFilter
+            columns={columns}
+            newFilter={newFilter}
+            setNewFilter={setNewFilter}
+            filters={filters}
+            addFilter={() => {
+              if (newFilter.value.trim() !== "") {
+                setFilters((prev) => [...prev, newFilter]);
+                setColumnFilters((prev) => [
+                  ...prev,
+                  { id: newFilter.column, value: newFilter },
+                ]);
+                setNewFilter({ ...newFilter, value: "" });
+                setCurrentPage(1);
+              }
+            }}
+            removeFilter={(index: number) => {
+              const toRemove = filters[index];
+              setFilters((prev) => prev.filter((_, i) => i !== index));
+              setColumnFilters((prev) =>
+                prev.filter((f) => f.id !== toRemove.column)
+              );
+              setCurrentPage(1);
+            }}
+            removeAllFilters={() => {
+              setFilters([]);
+              setColumnFilters([]);
+              setCurrentPage(1);
+            }}
+          />
+        )}
+
+        {columnOptionsOpen && (
+          <ColumnOptions
+            columns={columns}
+            columnVisibility={columnVisibility}
+            setColumnVisibility={setColumnVisibility}
+          />
+        )}
       </TableToolbar>
 
       <div className="table-wrapper">
@@ -171,8 +226,14 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
                     key={header.id}
                     onClick={header.column.getToggleSortingHandler()}
                   >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {{ asc: " ▲", desc: " ▼" }[header.column.getIsSorted() as string] ?? null}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                    {{
+                      asc: " ▲",
+                      desc: " ▼",
+                    }[header.column.getIsSorted() as string] ?? null}
                   </th>
                 ))}
               </tr>
@@ -184,14 +245,20 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </td>
                   ))}
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length} style={{ textAlign: "center" }}>
+                <td
+                  colSpan={table.getAllLeafColumns().length}
+                  style={{ textAlign: "center" }}
+                >
                   No data found
                 </td>
               </tr>
@@ -204,7 +271,7 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
         currentPage={currentPage}
         totalPages={totalPages}
         setCurrentPage={setCurrentPage}
-        totalRows={rows.length}
+        totalRows={allRows.length}
         rowsPerPage={rowsPerPage}
       />
     </div>

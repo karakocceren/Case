@@ -36,11 +36,17 @@ const TrafficLineChart: React.FC = () => {
             day: "numeric",
           }) === dateLabel
       );
-      return {
-        x: dateLabel,
-        y: found ? (found.value / globalMax) * 100 : 0,
-        original: found ? found.value : 0,
-      };
+      return found
+        ? {
+            x: dateLabel,
+            y: (found.value / globalMax) * 100,
+            original: found.value,
+          }
+        : {
+            x: dateLabel,
+            y: null as unknown as number,
+            original: null as unknown as number,
+          };
     }),
     borderColor: COLORS[idx % COLORS.length],
     backgroundColor: COLORS[idx % COLORS.length],

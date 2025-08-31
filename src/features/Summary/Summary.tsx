@@ -6,14 +6,15 @@ import { type NetworkKey, type MetricValues } from "./ColorScheme";
 import "./styles.css";
 
 const Summary: React.FC = () => {
-  const metrics: Record<string, MetricValues> = networkData.data[0].networkMetrics;
+  const metrics: Record<string, MetricValues> =
+    networkData.data[0].networkMetrics;
 
   const legendKeys: NetworkKey[] = [
     "search",
     "search_partners",
-    "mixed",
-    "youtube",
     "content",
+    "youtube",
+    "mixed",
   ];
 
   return (
