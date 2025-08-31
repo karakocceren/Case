@@ -18,7 +18,14 @@ const TableDownload: React.FC<TableDownloadProps> = ({ columns, rows }) => {
     const csvRows = [
       columns.join(delimiter),
       ...rows.map((row) =>
-        row.map((cell) => `"${cell}"`).join(delimiter)
+        row
+          .map((cell) => {
+            if (typeof cell === "number" && cell % 1 !== 0) {
+              return `" ${cell}"`;
+            }
+            return `"${cell}"`;
+          })
+          .join(delimiter)
       ),
     ].join("\r\n");
 

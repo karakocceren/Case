@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   type ColumnDef,
   flexRender,
@@ -69,7 +69,44 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
   const [filterPopupOpen, setFilterPopupOpen] = useState<boolean>(false);
   const [columnOptionsOpen, setColumnOptionsOpen] = useState<boolean>(false);
 
+  const filterRef = useRef<HTMLDivElement>(null);
+  const columnOptionsRef = useRef<HTMLDivElement>(null);
+
   const rowsPerPage = 5;
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target as Node)
+      ) {
+        setFilterPopupOpen(false);
+      }
+    };
+    if (filterPopupOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [filterPopupOpen]);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        columnOptionsRef.current &&
+        !columnOptionsRef.current.contains(event.target as Node)
+      ) {
+        setColumnOptionsOpen(false);
+      }
+    };
+    if (columnOptionsOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [columnOptionsOpen]);
 
   const customFilterFn = (
     row: Row<TableRow>,
@@ -175,44 +212,48 @@ const Table: React.FC<TableProps> = ({ columns, rows }) => {
         columnOptionsOpen={columnOptionsOpen}
       >
         {filterPopupOpen && (
-          <TableFilter
-            columns={columns}
-            newFilter={newFilter}
-            setNewFilter={setNewFilter}
-            filters={filters}
-            addFilter={() => {
-              if (newFilter.value.trim() !== "") {
-                setFilters((prev) => [...prev, newFilter]);
-                setColumnFilters((prev) => [
-                  ...prev,
-                  { id: newFilter.column, value: newFilter },
-                ]);
-                setNewFilter({ ...newFilter, value: "" });
+          <div ref={filterRef}>
+            <TableFilter
+              columns={columns}
+              newFilter={newFilter}
+              setNewFilter={setNewFilter}
+              filters={filters}
+              addFilter={() => {
+                if (newFilter.value.trim() !== "") {
+                  setFilters((prev) => [...prev, newFilter]);
+                  setColumnFilters((prev) => [
+                    ...prev,
+                    { id: newFilter.column, value: newFilter },
+                  ]);
+                  setNewFilter({ ...newFilter, value: "" });
+                  setCurrentPage(1);
+                }
+              }}
+              removeFilter={(index: number) => {
+                const toRemove = filters[index];
+                setFilters((prev) => prev.filter((_, i) => i !== index));
+                setColumnFilters((prev) =>
+                  prev.filter((f) => f.id !== toRemove.column)
+                );
                 setCurrentPage(1);
-              }
-            }}
-            removeFilter={(index: number) => {
-              const toRemove = filters[index];
-              setFilters((prev) => prev.filter((_, i) => i !== index));
-              setColumnFilters((prev) =>
-                prev.filter((f) => f.id !== toRemove.column)
-              );
-              setCurrentPage(1);
-            }}
-            removeAllFilters={() => {
-              setFilters([]);
-              setColumnFilters([]);
-              setCurrentPage(1);
-            }}
-          />
+              }}
+              removeAllFilters={() => {
+                setFilters([]);
+                setColumnFilters([]);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
         )}
 
         {columnOptionsOpen && (
-          <ColumnOptions
-            columns={columns}
-            columnVisibility={columnVisibility}
-            setColumnVisibility={setColumnVisibility}
-          />
+          <div ref={columnOptionsRef}>
+            <ColumnOptions
+              columns={columns}
+              columnVisibility={columnVisibility}
+              setColumnVisibility={setColumnVisibility}
+            />
+          </div>
         )}
       </TableToolbar>
 

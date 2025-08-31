@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles.css";
+import { GraphUp, CurrencyDollar } from "react-bootstrap-icons";
 
 type AdData = {
   dateStart: string;
@@ -24,8 +25,12 @@ const AdItem: React.FC<{ ad: AdData }> = ({ ad }) => {
     <div className="ad-item">
       <strong>{ad.adName}</strong>
       <div className="content">
-        <p>Impressions: {impressions}</p>
-        <p>Spend: {spend}</p>
+        <p>Impressions: </p>
+        <GraphUp />
+        <p>{impressions}</p>
+        <p>Spend: </p>
+        <CurrencyDollar />
+        <p>{spend}</p>
       </div>
     </div>
   );
