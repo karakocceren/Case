@@ -1,69 +1,80 @@
-# React + TypeScript + Vite
+# Case Study Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**A demo web application built using React, TypeScript, and Vite, intended for a case study.**
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## Expanding the ESLint configuration
+- **React** 
+- **TypeScript**
+- **Vite**
+- **ESLint**  
+- **Chart.js / React Chart.js**
+- **TanStack Table**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 1. Project Overview
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Key Components
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. **Main Dashboard**
+  - **Line Chart:**
+    The line chart displays data trends over time. While the chart itself shows normalized values for a clear visualization, a tooltip reveals the original, un-normalized data points upon hover.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+  - **Bar Chart:**
+    The bar chart provides a visual comparison of data across different dimensions.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+  - **Interactive Data Table:**
+    This is a robust and fully-featured data table. It offers various tools to explore and analyze data efficiently.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+      - **Paging:**
+        Users can navigate through large datasets with pagination controls.
+
+      - **Filtering:**
+        The table supports column filtering, allowing users to narrow down data based on specific criteria like "equals," "contains," "starts with," and "ends with."
+
+      - **Search:**
+        A global search bar enabling quick searching across all data in the table.
+
+      - **Sorting:**
+        Users can sort columns in ascending or descending order by clicking on the column headers.
+
+      - **Export:**
+        Data can be downloaded in multiple formats, including PDF and CSV, for offline use or further analysis.
+
+      - **Column Visibility:**
+        Users have the ability to show or hide specific columns, customizing their view of the data.
+
+2. **Ads Overview Component**
+
+    This component provides a snapshot of ad performance, allowing users to filter data by time interval.
+  - **Time Interval Filter:**
+    A dropdown menu lets users select a specific time frame, such as "Last 30 days," to view relevant data.
+
+3. **Ad Performance Summary**
+
+    This component visually represents ad performance metrics across different ad networks using bar charts.
+
+---
+
+## 2. Getting Started
+
+### Prerequisites
+- Node.js (v14+, ideally latest LTS)
+- npm or Yarn installed
+
+### Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/karakocceren/Case.git
+   cd Case
+2. **Install dependencies**
+   ```bash
+   npm install
+3. **Start the development server**
+   ```
+   npm run dev
+  - Then navigate to http://localhost:5173 (or the port Vite shows) to see the live app with HMR.
