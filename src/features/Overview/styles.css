@@ -38,25 +38,25 @@
   color: #333;
 }
 
-.ad-item {
+.item {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
 }
 
-.ads-list {
+.item-list {
   margin-top: 1rem;
 }
 
-.ads-list .ad-item {
+.item-list .item {
   border-bottom: 1px solid #eee;
 }
 
-.ads-list .ad-item:first-child {
+.item-list .item:first-child {
   border-top: 1px solid #eee;
   padding-top: 1rem;
 }
 
-.ads-list .ad-item:last-child {
+.item-list .item:last-child {
   border-bottom: none;
 }
 

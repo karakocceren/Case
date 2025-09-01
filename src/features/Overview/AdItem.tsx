@@ -22,7 +22,7 @@ const AdItem: React.FC<{ ad: AdData }> = ({ ad }) => {
   const spend = formatNumber(parseFloat(ad.spend));
 
   return (
-    <div className="ad-item">
+    <div className="item">
       <strong>{ad.adName}</strong>
       <div className="content">
         <p>Impressions: </p>

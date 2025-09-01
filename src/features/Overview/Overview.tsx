@@ -38,7 +38,7 @@ const Overview: React.FC = () => {
         <ChevronDownIcon className="chevron-icon" />
       </div>
 
-      <div className="ads-list">
+      <div className="item-list">
         {filteredAds.length > 0 ? (
           filteredAds.map((ad, idx) => <AdItem key={idx} ad={ad} />)
         ) : (
