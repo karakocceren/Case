@@ -15,7 +15,9 @@ const Overview: React.FC = () => {
 
     return adsData.data.data.filter((ad) => {
       const start = new Date(ad.dateStart);
-      return start >= cutoff && start <= today;
+      const stop = new Date(ad.dateStop);
+
+      return start <= today && stop >= cutoff;
     });
   }, [interval]);
 
@@ -24,7 +26,11 @@ const Overview: React.FC = () => {
       <h2 className="overview-title">Ads Overview</h2>
 
       <div className="select-wrapper">
-        <select className="select" value={interval} onChange={(e) => setInterval(e.target.value)}>
+        <select
+          className="select"
+          value={interval}
+          onChange={(e) => setInterval(e.target.value)}
+        >
           <option value="7">Last 7 days</option>
           <option value="30">Last 30 days</option>
           <option value="90">Last 90 days</option>
