@@ -78,3 +78,12 @@
    ```
    npm run dev
   - Then navigate to http://localhost:5173 (or the port Vite shows) to see the live app with HMR.
+
+---
+
+## Dev Note:
+
+The Overview component’s data was initially not showing in production due to ad-blocker extensions blocking elements with class names containing "ad". Renaming these classes (e.g., .ad-item → .item) resolved the issue.
+In case you encounter the same issue, try disabling any ad-blocker extensions or check if class names, IDs, or variables contain ad-related keywords that might be blocked.
+
+---
